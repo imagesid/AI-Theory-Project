@@ -282,7 +282,7 @@ if __name__ == '__main__':
     
     # game loop
     while True:
-        reward, game_over, score = game.play_step([1, 0, 0, 0])
+        reward, game_over, score = game.play_step([0, 1, 0, 0])
         if game_over == True:
             game.showGameOverScreen()
             break
