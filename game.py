@@ -249,17 +249,17 @@ class SpriteGame:
         pygame.display.update()
 
     def save_score(self):
-            global highscore
-            if self.score > highscore:
-                highscore = self.score
-                txtfile= open("high score.txt", 'w')
-                txtfile.write(str(highscore))
-                BASICFONT = pygame.font.Font('freesansbold.ttf', 16)
-                pressKeySurf = BASICFONT.render('Best Score: '+ str(highscore) , True, (255,5,20))
-                pressKeyRect = pressKeySurf.get_rect()
-                pressKeyRect.topleft = (440, 450)
-                self.window.blit(pressKeySurf, pressKeyRect)
-                pygame.display.update()
+        #global highscore
+        if self.score > self.highscore:
+            self.highscore = self.score
+            txtfile= open("high score.txt", 'w')
+            txtfile.write(str(self.highscore))
+            BASICFONT = pygame.font.Font('freesansbold.ttf', 16)
+            pressKeySurf = BASICFONT.render('Best Score: '+ str(self.highscore) , True, (255,5,20))
+            pressKeyRect = pressKeySurf.get_rect()
+            pressKeyRect.topleft = (440, 450)
+            self.window.blit(pressKeySurf, pressKeyRect)
+            pygame.display.update()
 
     def showGameOverScreen(self):
         self.window.fill((0,0,0))
