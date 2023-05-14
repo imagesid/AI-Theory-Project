@@ -22,6 +22,7 @@ Point = namedtuple('Point', 'x, y')
 
 class SpriteGame:
     def __init__(self, w=640,h=480):
+        self.size = 50
         self.w = w
         self.h = h
         self.mixer = pygame.mixer
@@ -31,6 +32,8 @@ class SpriteGame:
         pygame.display.set_caption("Simple GUI game")
         self.im3 = pygame.image.load("bakc.PNG")
         self.im3.convert()
+        self.clock = pygame.time.Clock()
+        self.FPS = 1000  # Frames per second.
         self.reset()
         
     #mixer = pygame.mixer
@@ -49,7 +52,7 @@ class SpriteGame:
     def displ(self,strin, h = 40, v =92):
         self.window.blit(strin, (h,v))
         pygame.display.update()
-        sleep(0.081)
+        #sleep(0.081)
 
     def reset(self):
         
@@ -57,7 +60,7 @@ class SpriteGame:
         self.textRectObj = self.textSurf.get_rect()
         self.textRectObj.center = (50,50)
         self.frame_iteration = 0
-        self.welcome_screen()
+        #self.welcome_screen()
         try:
             txtfile= open("high score.txt",'r')
             self.highscore = int(txtfile.read())
@@ -78,6 +81,11 @@ class SpriteGame:
         pressKeyRect.topleft = (440, 450)
         self.window.blit(pressKeySurf, pressKeyRect)
         
+    def check_display(self):
+        self.move()
+        pygame.display.update()
+        #sleep(1)
+        
     def welcome_screen(self):
         titleFont = pygame.font.Font('freesansbold.ttf', 100)
         titleSurf1 = titleFont.render('PAMPUCH', True, (255,255,10)) 
@@ -87,7 +95,7 @@ class SpriteGame:
         self.window.blit(titleSurf1,titleSurf11)
         self.developer()
         pygame.display.update()
-        sleep(6)
+        #sleep(20)
 
     def move(self):
         if self.direction == "horizontal":
@@ -96,10 +104,10 @@ class SpriteGame:
             if self.hor <= -10:
                 self.hor = 640
             self.displ(self.im1, h = self.hor, v = self.ver)
-            self.hor += self.b 
+            #self.hor += self.b 
             self.displ(self.im11, h = self.hor, v = self.ver)
-            self.hor += self.b
-            sleep(0.03)
+            #self.hor += self.b
+            #sleep(0.03)
             self.displ(self.im2, h = self.hor, v = self.ver)
             self.hor += self.b
             self.update()
@@ -109,10 +117,10 @@ class SpriteGame:
             if self.ver <= -10:
                 self.ver = 470
             self.displ(self.im1,h = self.hor, v = self.ver)
-            self.ver += self.b
+            #self.ver += self.b
             self.displ(self.im11,h = self.hor, v = self.ver)
-            self.ver += self.b
-            sleep(0.028)
+            #self.ver += self.b
+            #sleep(0.028)
             self.displ(self.im2,h = self.hor, v = self.ver)
             self.ver += self.b 
             self.update()
@@ -120,11 +128,31 @@ class SpriteGame:
         
     
     def is_enemy(self, pt=None):
-        
-        if (abs(pt.x - self.ene_pos_hor) <= 20) or (abs(pt.y - self.ene_pos_ver) <= 20):
+        # print("pt.x",pt.x)
+        # print("pt.y",pt.y)
+        # print("self.ene_pos_hor", self.ene_pos_hor)
+        # print("self.ene_pos_ver", self.ene_pos_ver)
+        # print("First",abs(pt.x - self.ene_pos_hor) )
+        # print("Second",abs(pt.y - self.ene_pos_ver) )
+        if (abs(pt.x - self.ene_pos_hor) < self.size) and (abs(pt.y - self.ene_pos_ver) < self.size):
             return True
         return False
+
+    def load_player(self, direction="ri"):
+        actor1 = pygame.image.load(direction + " 1.PNG")
+        actor1 = pygame.transform.scale(actor1, (self.size, self.size))
+        self.im1 = actor1.convert()
+        
+        actor2 = pygame.image.load(direction + " 2.PNG")
+        actor2 = pygame.transform.scale(actor2, (self.size, self.size))
+        self.im11 = actor2.convert()
+        
+        actor3 = pygame.image.load(direction + " 3.PNG")
+        actor3 = pygame.transform.scale(actor3, (self.size, self.size))
+        self.im2 = actor3.convert()
+        
     def play_step(self, action):
+        self.clock.tick(self.FPS)
         self.frame_iteration += 1
         # my score board
         self.textSurf = fontObj.render("Score " + str(self.score) , True , (0,255,0),(255,0,0)) # setting score to change
@@ -145,7 +173,7 @@ class SpriteGame:
         reward = 0
         game_over = False 
         
-        if (abs(self.hor - self.ene_pos_hor) <= 20) and (abs(self.ver - self.ene_pos_ver) <= 20):
+        if (abs(self.hor - self.ene_pos_hor) <= self.size) and (abs(self.ver - self.ene_pos_ver) <= self.size):
             pygame.mixer.music.pause()
             self.play("boom.wav") # boom wav and time to game over and try to another chance
             self.window.blit(self.textSurf, self.textRectObj)
@@ -154,10 +182,15 @@ class SpriteGame:
             reward = -10
             return reward, game_over, self.score
             #if self.frame_iteration > 100*len(self.snake):
-            
+        
+        if self.frame_iteration > 100:    
+            self.running = False
+            game_over = True
+            reward = -10
+            return reward, game_over, self.score
         # 4. eat food
         
-        if (abs(self.hor - self.ye_hor) <= 20) and (abs(self.ver - self.ye_ver) <= 20):
+        if (abs(self.hor - self.ye_hor) <= self.size) and (abs(self.ver - self.ye_ver) <= self.size):
             self.play("s.wav")
             self.score += 100
             self.ye_hor = randint(0,570)
@@ -166,36 +199,26 @@ class SpriteGame:
             self.tempb = randrange(19,30)
             self.ene_pos_hor = self.ver + self.a
             self.ene_pos_ver = self.hor + self.tempb
-            
             reward  = 10
-            
         # action
         # up
         if np.array_equal(action, [1, 0, 0, 0]):
-            self.im1 = pygame.image.load("up 1.PNG").convert()
-            self.im11 = pygame.image.load("up 2.PNG").convert()
-            self.im2 = pygame.image.load("up 3.PNG").convert()
-            self.b = -6 
+            self.load_player("up")
+            self.b = -self.size 
             self.direction = "vertical"
         # right
         elif np.array_equal(action, [0, 1, 0, 0]):
-            self.im1 = pygame.image.load("ri 1.PNG").convert()
-            self.im11 = pygame.image.load("ri 2.PNG").convert()
-            self.im2 = pygame.image.load("ri 3.PNG").convert()
-            self.b = 6  
+            self.load_player()
+            self.b = self.size  
             self.direction = "horizontal"
         # left
         elif np.array_equal(action, [0, 0, 1, 0]):
-            self.im1 = pygame.image.load("le 1.PNG").convert()
-            self.im11 = pygame.image.load("le 2.PNG").convert()
-            self.im2 = pygame.image.load("le 3.PNG").convert()
-            self.b = -6 
+            self.load_player("le")
+            self.b = -self.size 
             self.direction = "horizontal"
         else: # [0, 0, 0, 1]
-            self.im1 = pygame.image.load("do 1.PNG").convert()
-            self.im11 = pygame.image.load("do 2.PNG").convert()
-            self.im2 = pygame.image.load("do 3.PNG").convert()
-            self.b = 6
+            self.load_player("do")
+            self.b = self.size
             self.direction = "vertical"
         
         return reward, game_over, self.score    
@@ -211,19 +234,29 @@ class SpriteGame:
         self.score = 0
         self.hor = 40 # horizotal distance coverage
         self.ver = 92 # vertical distance coverage
-        self.b = 6 # 6=forward -6=backward
+        self.b = self.size # 20=forward -20=backward
         self.direction = "horizontal"
         white = (255,255,255)
         clock = pygame.time.Clock()
         self.window.fill(white)
 
         ##### Loading Images ######
-        self.ye_1 = pygame.image.load("ye 1.PNG").convert() # food
-        self.im1 = pygame.image.load("ri 1.PNG").convert() # actor motion1
-        self.im11 = pygame.image.load("ri 2.PNG").convert() # actor motion2
-        self.im2 = pygame.image.load("ri 3.PNG").convert() # actor motion2
+        food = pygame.image.load("ye 1.PNG")
+        food = pygame.transform.scale(food, (self.size, self.size))
+        self.ye_1 = food.convert()
+        
+        self.load_player()
+        
+        enemy = pygame.image.load("ri 11.PNG")
+        enemy = pygame.transform.scale(enemy, (self.size, self.size))
+        self.enemy_1 = enemy.convert()
+        
+        #self.ye_1 = pygame.image.load("ye 1.PNG").convert() # food
+        #self.im1 = pygame.image.load("ri 1.PNG").convert() # actor motion1
+        #self.im11 = pygame.image.load("ri 2.PNG").convert() # actor motion2
+        #self.im2 = pygame.image.load("ri 3.PNG").convert() # actor motion2
         self.im3 = pygame.image.load("bakc.PNG").convert() # background
-        self.enemy_1 = pygame.image.load("ri 11.PNG").convert() # enemy
+        #self.enemy_1 = pygame.image.load("ri 11.PNG").convert() # enemy
         ##### -------------  #######
 
         # positions of food # 
@@ -274,18 +307,18 @@ class SpriteGame:
         self.window.blit(overSurf, overRect)
         self.save_score()
         pygame.display.update()
-        sleep(2)
+        #sleep(2)
 
 
-if __name__ == '__main__':
-    game = SpriteGame()
+# if __name__ == '__main__':
+#     game = SpriteGame()
     
-    # game loop
-    while True:
-        reward, game_over, score = game.play_step([0, 1, 0, 0])
-        if game_over == True:
-            game.showGameOverScreen()
-            break
+#     # game loop
+#     while True:
+#         reward, game_over, score = game.play_step([0, 1, 0, 0])
+#         if game_over == True:
+#             game.showGameOverScreen()
+#             break
         
     
                     

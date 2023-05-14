@@ -14,20 +14,22 @@ LR = 0.001
 class Agent:
 
     def __init__(self):
+        self.size = 50
         self.n_games = 0
         self.epsilon = 0 # randomness
         self.gamma = 0.9 # discount rate
         self.memory = deque(maxlen=MAX_MEMORY) # popleft()
-        self.model = Linear_QNet(11, 256, 3)
+        self.model = Linear_QNet(12, 256, 4)
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
+        
 
 
     def get_state(self, game):
-        head = game.snake[0]
-        point_l = Point(head.hor - 6, head.ver)
-        point_r = Point(head.hor + 6, head.ver)
-        point_u = Point(head.hor, head.ver - 6)
-        point_d = Point(head.hor, head.ver + 6)
+        head = game
+        point_l = Point(head.hor - self.size, head.ver)
+        point_r = Point(head.hor + self.size, head.ver)
+        point_u = Point(head.hor, head.ver - self.size)
+        point_d = Point(head.hor, head.ver + self.size)
         
         # dir_l = game.direction == Direction.LEFT
         # dir_r = game.direction == Direction.RIGHT
@@ -39,16 +41,22 @@ class Agent:
         dir_d = False
 
         # left
-        if game.direction == "horizontal" and game.b == -6:
+        if game.direction == "horizontal" and game.b == -self.size:
             dir_l = True
-        elif game.direction == "horizontal" and game.b == 6:
+        elif game.direction == "horizontal" and game.b == self.size:
             dir_r = True
-        elif game.direction == "vertical" and game.b == 6:
+        elif game.direction == "vertical" and game.b == self.size:
             dir_u = True
-        elif game.direction == "vertical" and game.b == -6:
+        elif game.direction == "vertical" and game.b == -self.size:
             dir_d = True
             
-            
+        # print("Point r", point_r)    
+        # print("game.is_enemy(point_r))", game.is_enemy(point_r))  
+        
+        # print("Point d", point_d)    
+        # print("game.is_enemy(point_d))", game.is_enemy(point_d))   
+        # print("game.is_enemy(point_u))", game.is_enemy(point_u))   
+        # print("game.is_enemy(point_l))", game.is_enemy(point_l))   
         state = [
             # Danger straight
             (dir_r and game.is_enemy(point_r)) or 
@@ -129,16 +137,28 @@ def train():
     record = 0
     agent = Agent()
     game = SpriteGame()
+    # game.hor=120
+    # game.ver=100
+    # game.ene_pos_hor=100
+    # game.ene_pos_ver=100
+    # state_old = agent.get_state(game)
+    # print("Old State", state_old)
+    # game.check_display()
+    # return 0
     while True:
         # get old state
         state_old = agent.get_state(game)
+        print("Old State", state_old)
 
         # get move
         final_move = agent.get_action(state_old)
+        print("Final Move", final_move)
 
         # perform move and get new state
-        reward, done, score = game.main(final_move)
+        reward, done, score = game.play_step(final_move)
         state_new = agent.get_state(game)
+        if reward > 0:
+            print(" reward, done, score",  reward, done, score)
 
         # train short memory
         agent.train_short_memory(state_old, final_move, reward, state_new, done)
