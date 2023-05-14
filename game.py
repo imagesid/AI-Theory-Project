@@ -21,21 +21,27 @@ Point = namedtuple('Point', 'x, y')
 # is_collision
 
 class SpriteGame:
-    def __init__(self, w=640,h=480):
+    # def __init__(self, w=640,h=480):
+    def __init__(self, w=650,h=500):
         self.size = 50
         self.w = w
         self.h = h
         self.mixer = pygame.mixer
         self.window =  pygame.display.set_mode((self.w, self.h))
         white = (255,255,255)
+        black = (0,0,0)
         self.window.fill(white)
         pygame.display.set_caption("Simple GUI game")
-        self.im3 = pygame.image.load("bakc.PNG")
-        self.im3.convert()
-        self.clock = pygame.time.Clock()
-        self.FPS = 1000  # Frames per second.
+        #self.im3 = pygame.image.load("bakc.PNG")
+        #self.im3.convert()
+        #self.clock = pygame.time.Clock()
+        #self.FPS = 10  # Frames per second.
+        self.sleep = 0.0005
         self.reset()
-        
+    
+    def speed(self, run_only=False) :
+        if run_only:
+            self.sleep = 0.05
     #mixer = pygame.mixer
     #window  = pygame.display.set_mode((640,480),0,32)
     #white = (255,255,255)
@@ -49,10 +55,12 @@ class SpriteGame:
         self.sound = self.mixer.Sound(wav_path)
         self.channel = self.sound.play()
 
-    def displ(self,strin, h = 40, v =92):
+    # def displ(self,strin, h = 40, v =92):
+    def displ(self,strin, h = 50, v =100):
         self.window.blit(strin, (h,v))
         pygame.display.update()
-        #sleep(0.081)
+        #sleep(0.011)
+        sleep(self.sleep)
 
     def reset(self):
         
@@ -99,10 +107,10 @@ class SpriteGame:
 
     def move(self):
         if self.direction == "horizontal":
-            if self.hor >= 630:
-                self.hor = 0
-            if self.hor <= -10:
-                self.hor = 640
+            # if self.hor >= self.w:
+            #     self.hor = 0
+            # if self.hor <= -self.size:
+            #     self.hor = self.w
             self.displ(self.im1, h = self.hor, v = self.ver)
             #self.hor += self.b 
             self.displ(self.im11, h = self.hor, v = self.ver)
@@ -112,10 +120,10 @@ class SpriteGame:
             self.hor += self.b
             self.update()
         elif self.direction  == "vertical":
-            if self.ver >= 470:
-                self.ver = 0
-            if self.ver <= -10:
-                self.ver = 470
+            # if self.ver >= self.h:
+            #     self.ver = 0
+            # if self.ver <= -self.size:
+            #     self.ver = self.h
             self.displ(self.im1,h = self.hor, v = self.ver)
             #self.ver += self.b
             self.displ(self.im11,h = self.hor, v = self.ver)
@@ -133,26 +141,41 @@ class SpriteGame:
         # print("self.ene_pos_hor", self.ene_pos_hor)
         # print("self.ene_pos_ver", self.ene_pos_ver)
         # print("First",abs(pt.x - self.ene_pos_hor) )
-        # print("Second",abs(pt.y - self.ene_pos_ver) )
-        if (abs(pt.x - self.ene_pos_hor) < self.size) and (abs(pt.y - self.ene_pos_ver) < self.size):
+        # print("Second",abs(pt.y - self.ene_pos_ver) )           
+        if (abs(pt.x - self.ene_pos_hor) <= self.size) and (abs(pt.y - self.ene_pos_ver) <= self.size):
             return True
+        # if pt.x > self.w or pt.x < 0 or pt.y > self.h or pt.y < 0:
+            
+        #     return True
         return False
 
     def load_player(self, direction="ri"):
         actor1 = pygame.image.load(direction + " 1.PNG")
         actor1 = pygame.transform.scale(actor1, (self.size, self.size))
         self.im1 = actor1.convert()
+        #self.im1.set_alpha(128)
         
         actor2 = pygame.image.load(direction + " 2.PNG")
         actor2 = pygame.transform.scale(actor2, (self.size, self.size))
         self.im11 = actor2.convert()
+        #self.im11.set_alpha(128)
         
         actor3 = pygame.image.load(direction + " 3.PNG")
         actor3 = pygame.transform.scale(actor3, (self.size, self.size))
         self.im2 = actor3.convert()
+        #self.im2.set_alpha(128)
         
+    def is_collision(self, pt=None):
+        if pt is None:
+            pt = Point(self.hor, self.ver)
+        # hits boundary
+        if pt.x > self.w or pt.x < 0 or pt.y > self.h or pt.y < 0:
+            return True
+        
+        return False
+    
     def play_step(self, action):
-        self.clock.tick(self.FPS)
+        #self.clock.tick(self.FPS)
         self.frame_iteration += 1
         # my score board
         self.textSurf = fontObj.render("Score " + str(self.score) , True , (0,255,0),(255,0,0)) # setting score to change
@@ -174,6 +197,12 @@ class SpriteGame:
         game_over = False 
         
         if (abs(self.hor - self.ene_pos_hor) <= self.size) and (abs(self.ver - self.ene_pos_ver) <= self.size):
+            # print("pt.x",self.hor)
+            # print("pt.y",self.ver)
+            # print("self.ene_pos_hor", self.ene_pos_hor)
+            # print("self.ene_pos_ver", self.ene_pos_ver)
+            # print("First",abs(pt.x - self.ene_pos_hor) )
+            # print("Second",abs(pt.y - self.ene_pos_ver) )
             pygame.mixer.music.pause()
             self.play("boom.wav") # boom wav and time to game over and try to another chance
             self.window.blit(self.textSurf, self.textRectObj)
@@ -183,23 +212,33 @@ class SpriteGame:
             return reward, game_over, self.score
             #if self.frame_iteration > 100*len(self.snake):
         
-        if self.frame_iteration > 100:    
+        # 3.b check if too much steps
+        score_small = 1
+        if self.score > 0:
+            score_small = self.score / 100
+        #print("Score small", score_small)
+        #if self.frame_iteration > 500 * score_small:    
+        if self.is_collision() or self.frame_iteration > 100 * score_small:    
+        #if self.frame_iteration > 100 * score_small:    
             self.running = False
             game_over = True
             reward = -10
             return reward, game_over, self.score
-        # 4. eat food
         
+        
+        # 4. eat food
         if (abs(self.hor - self.ye_hor) <= self.size) and (abs(self.ver - self.ye_ver) <= self.size):
             self.play("s.wav")
             self.score += 100
-            self.ye_hor = randint(0,570)
-            self.ye_ver = randint(0,410)
-            self.a = randrange(18,30)
-            self.tempb = randrange(19,30)
-            self.ene_pos_hor = self.ver + self.a
-            self.ene_pos_ver = self.hor + self.tempb
+            # self.ye_hor = randint(0,570)
+            # self.ye_ver = randint(0,410)
+            # self.a = randrange(18,30)
+            # self.tempb = randrange(19,30)
+            # self.ene_pos_hor = self.ver + self.a
+            # self.ene_pos_ver = self.hor + self.tempb
+            self.place_food_enemy()
             reward  = 10
+        
         # action
         # up
         if np.array_equal(action, [1, 0, 0, 0]):
@@ -221,9 +260,37 @@ class SpriteGame:
             self.b = self.size
             self.direction = "vertical"
         
+        # for manual check
+        # for event in pygame.event.get():
+        #     if (event.type == pygame.QUIT):
+        #         self.running = False
+        #         pygame.quit()
+        #         exit()
+        #     elif (event.type == pygame.KEYDOWN):
+        #         if ( event.key == pygame.K_SPACE):
+        #             self.displ(self.im2, h = self.hor , v = self.ver)
+        #             self.window.blit(self.textSurf, self.textRectObj)
+        #             pygame.event.wait()                   
+        #         elif (event.key == pygame.K_LEFT or event.key == pygame.K_a):
+        #             self.load_player("le")
+        #             self.b = -self.size 
+        #             self.direction = "horizontal"
+        #         elif (event.key == pygame.K_RIGHT or event.key == pygame.K_d):                                                       
+        #             self.load_player()
+        #             self.b = self.size  
+        #             self.direction = "horizontal"
+        #         elif (event.key == pygame.K_UP or event.key == pygame.K_w):                                                        
+        #             self.load_player("up")
+        #             self.b = -self.size 
+        #             self.direction = "vertical"
+        #         elif (event.key == pygame.K_DOWN or event.key == pygame.K_s):                                                     
+        #             self.load_player("do")
+        #             self.b = self.size
+        #             self.direction = "vertical"
+        
         return reward, game_over, self.score    
     def main(self):
-        global im3, ye_1, enemy_1, ye_hor, ye_ver, ene_pos_ver, ene_pos_hor, score, white
+        #global im3, ye_1, enemy_1, ye_hor, ye_ver, ene_pos_ver, ene_pos_hor, score, white
         
         # [straight, right, left, back]
         
@@ -232,8 +299,10 @@ class SpriteGame:
         
         self.running = True
         self.score = 0
-        self.hor = 40 # horizotal distance coverage
-        self.ver = 92 # vertical distance coverage
+        # self.hor = 40 # horizotal distance coverage
+        # self.ver = 92 # vertical distance coverage
+        self.hor = self.w/2
+        self.ver = self.h/2
         self.b = self.size # 20=forward -20=backward
         self.direction = "horizontal"
         white = (255,255,255)
@@ -251,22 +320,22 @@ class SpriteGame:
         enemy = pygame.transform.scale(enemy, (self.size, self.size))
         self.enemy_1 = enemy.convert()
         
+        background = pygame.image.load("bakc.PNG")
+        background = pygame.transform.scale(background, (self.w, self.h))
+        self.im3 = background.convert()
+        
         #self.ye_1 = pygame.image.load("ye 1.PNG").convert() # food
         #self.im1 = pygame.image.load("ri 1.PNG").convert() # actor motion1
         #self.im11 = pygame.image.load("ri 2.PNG").convert() # actor motion2
         #self.im2 = pygame.image.load("ri 3.PNG").convert() # actor motion2
-        self.im3 = pygame.image.load("bakc.PNG").convert() # background
+        #self.im3 = pygame.image.load("bakc.PNG").convert() # background
         #self.enemy_1 = pygame.image.load("ri 11.PNG").convert() # enemy
         ##### -------------  #######
 
         # positions of food # 
-        self.ye_hor = randint(0,580)
-        self.ye_ver = randint(0,450)
-
-        # positions of enemy #
-        self.ene_pos_hor = randint(0,550)
-        self.ene_pos_ver = randint(0,390)
-
+        # self.ye_hor = randint(0,580)
+        # self.ye_ver = randint(0,450)
+        self.place_food_enemy()
         # score board
         self.best_scoresurf = fontObj.render("Best score: " + str(self.highscore) , True, (0,255,0,), (255,0,100))
         self.bestrect = self.best_scoresurf.get_rect()
@@ -274,6 +343,29 @@ class SpriteGame:
         
         # main game loop
         #while self.running : 
+        
+    def place_food_enemy(self) :
+        self.ye_hor = randint(self.size, self.w-self.size )
+        self.ye_ver = randint(self.size, self.h-self.size )
+
+        # positions of enemy #
+        # self.ene_pos_hor = randint(0,550)
+        # self.ene_pos_ver = randint(0,390)
+        self.ene_pos_hor = randint(self.size, self.w-self.size )
+        self.ene_pos_ver = randint(self.size, self.h-self.size )
+        
+        # while the food too close with the enemy
+        dist = self.size * 1.1
+        while abs(self.ene_pos_hor - self.ye_hor ) < dist or abs(self.ene_pos_ver - self.ye_ver ) < dist:
+            # print("Too close")
+            # print("Enemy x", self.ene_pos_hor)
+            # print("Food x", self.ye_hor)
+            # print("Enemy y", self.ene_pos_ver)
+            # print("Food y", self.ye_ver)
+            # self.ene_pos_hor = randint(0,550)
+            # self.ene_pos_ver = randint(0,390)
+            self.ene_pos_hor = randint(self.size, self.w-self.size )
+            self.ene_pos_ver = randint(self.size, self.h-self.size )
         
     def update(self):
         self.displ(self.im3, 0,0)
