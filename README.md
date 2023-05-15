@@ -114,7 +114,7 @@ Simplification:
 
 ### Deep Q Learning
 
-### Pseudocode of agent
+### Pseudocode of Train
 ```
 
 Set the "run_only" variable to False
@@ -162,13 +162,142 @@ Enter an infinite loop:
 
 ```
 
+### Pseudocode of get_state() method
+```
+Initialize 14 state variables with these values:
+    Set to 1 if current movement is horizontal movement
+    Set to 1 if current movement is vertical movement
+
+    Set to 1 if enemy is in the front side
+    Set to 1 if enemy is in the right side
+    Set to 1 if enemy is in the left side
+    Set to 1 if enemy is in the back side
+
+    Set to 1 if current direction is to the left
+    Set to 1 if current direction is to the right
+    Set to 1 if current direction is to the top
+    Set to 1 if current direction is to the bottom
+
+    Set to 1 if food is in the left side
+    Set to 1 if food is in the right side
+    Set to 1 if food is in the top side
+    Set to 1 if food is in the bottom side
+
+Return the values of the state variables
+
+```
+
+### Pseudocode of get_action() method
+```
+Initialize final_move as a list with 4 values: "[0, 0, 0, 0]"
+
+# Set epsilon for exploration vs exploitation
+Initialize epsilon with 1000 minus the number of played games
+
+# If in test mode
+If test mode is True:
+    # Load model
+    If best mode is True:
+        Load best model
+    Else:
+        Load last model
+
+    # Call Torch Prediction
+    Call Torch Prediction with current state
+
+    # Change biggest return value index to 1
+    Change the index of the biggest return value to 1
+
+    # Return final_move
+    Return final_move
+
+# Set and return Random Move
+If a random integer between 0 and 200 is lower than epsilon:
+    Set final_move to a random move
+
+# Call Torch Prediction
+Call Torch Prediction with current state
+
+# Change biggest return value index to 1
+Change the index of the biggest return value to 1
+
+# Return final_move
+Return final_move
+
+
+```
+
+### Pseudocode of play_step() method
+```
+Initialize action from parameter
+Set Punishment -10 If Actor Touching Enemy
+Set Punishment -10 If Step more than 100 steps times by success step (score/100)
+Set Punishment -10 if There are loop go straight action.
+Set Reward +10 If Actor Touching Food
+
+Go Up if action equal [1,0,0,0]
+Go Right if action equal [0,1,0,0]
+Go Left if action equal [0,0,1,0]
+Go Down if action equal [0,0,0,1]
+
+```
+
+### Pseudocode of train_short_memory() method
+```
+Call the train_step method of self.trainer with the arguments states, actions, rewards, next_states, and dones
+```
+
+### Pseudocode of train_long_memory() method
+```
+If the length of self.memory is greater than BATCH_SIZE:
+    Set mini_sample as a random sample of size BATCH_SIZE from self.memory (a list of tuples)
+Else:
+    Set mini_sample as a copy of self.memory
+
+Extract states, actions, rewards, next_states, and dones by unpacking the mini_sample tuple
+
+Call the train_step method of self.trainer with the arguments states, actions, rewards, next_states, and dones
+```
+
+### Pseudocode of train_step() method
+```
+Initialize state as a torch tensor with a float data type
+Initialize next_state as a torch tensor with a float data type
+Initialize action as a torch tensor with a long data type
+Initialize reward as a torch tensor with a float data type
+
+If the length of the shape of state is 1:
+    Expand the dimensions of state, next_state, action, reward, and done tensors by adding an additional dimension with value 1
+
+Initialize done as a tuple with a single boolean value
+
+Initialize pred as the output of the self.model method called with the argument state
+
+Create a deep copy of pred and store it in target
+
+Iterate over the range of the length of done:
+    Set Q_new to the value of reward at the current index
+    If not done at the current index:
+        Set Q_new to the sum of reward at the current index and self.gamma multiplied by the maximum value of the self.model method called with next_state at the current index
+    Set the value of the target tensor at the current index and the index with the maximum value of action at the current index to Q_new
+
+Zero the gradients of the self.optimizer
+
+Calculate the loss by calling the self.criterion method with the arguments target and pred
+
+Compute gradients of the loss tensor by calling the backward method on the loss tensor
+
+Update the weights of the self.optimizer by calling the step method on the optimizer.
+
+```
+
 ## Results
 The Q-Learning algorithm was able to learn an optimal policy for the game, achieving best score 6000 over 5000 episodes.
 
 
 ![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/Figure_77777.png?raw=true)
 
-## Chalenges
+## Challenges
 - Without boundary, the actor can go everywhere without punishment. It made the state wider. That's why the score wasn't good enough
 - There were loop go straight action.
 - Too much steps
@@ -181,6 +310,7 @@ The Q-Learning algorithm was able to learn an optimal policy for the game, achie
 ## Future work
 - Add boundary to the game
 - Add more exponents if possible
+- Train Longer
 
 ## Conclusion
 Reinforcement Learning with Q-Learning is a powerful technique that can be used to solve a variety of problems, including game playing. This project demonstrates the effectiveness of Q-Learning for game playing and serves as a starting point for exploring other reinforcement learning algorithms and applications.
