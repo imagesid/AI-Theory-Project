@@ -14,6 +14,10 @@ Please note that I tried to do Reinforcement Learning from that code so the game
 ## Q-Learning Algorithm
 Q-Learning is a model-free, off-policy reinforcement learning algorithm used to find the optimal action-selection policy. In Q-Learning, the agent learns the Q-value of a state-action pair, which represents the expected cumulative reward the agent will receive by taking that action in that state and following the optimal policy thereafter. The Q-value is updated iteratively using the Bellman equation until convergence.
 
+
+## Environtment
+I developed this code in Conda Environtment with Python Version 3.10
+
 ## Getting Started
 To run this project, first clone this repository. Then, install the required dependencies by running the following command:
 
@@ -43,6 +47,44 @@ To run the best model we've trained, run the following command:
 
 ```sh
 python agent.py -t -b
+```
+## Model In Detail
+
+### Reward & Punishment
+- Eat Food = +10
+- Hit Enemy = -10
+- Else = 0
+
+### Actions
+These actions will be used by an agent to explore the game
+```sh
+[1,0,0,0] = Up
+[0,1,0,0] = Right 
+[0,0,1,0] = Left 
+[0,0,0,1] = Down
+```
+### State
+I put 14 states in this project.
+```sh
+[
+    is_horizontal_movement(),
+    is_vertical_movement(),
+
+    is_enemy_in_front(),
+    is_enemy_in_right(),
+    is_enemy_in_left(),
+    is_enemy_in_back(),
+
+    is_direction_left(),
+    is_direction_right(),
+    is_direction_up(),
+    is_direction_down(),
+
+    is_food_left(),
+    is_food_right(),
+    is_food_up(),
+    is_food_down(),
+]
 ```
 
 ## Results
