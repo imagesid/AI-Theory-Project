@@ -177,7 +177,7 @@ class Agent:
             if args.best:
                 #best trained
                 # filename = '14-05-2023-16 copy 2.pth'
-                filename = '14-05-2023-16 copy 3.pth'
+                filename = '14-05-2023-16 copy 11.pth'
                 
             state0 = torch.tensor(state, dtype=torch.float)
             self.model.load(filename)
