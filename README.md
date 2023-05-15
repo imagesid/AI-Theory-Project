@@ -315,12 +315,14 @@ The Q-Learning algorithm was able to learn an optimal policy for the game, achie
 - There were loop go straight action.
 - Too much steps
 - The game is not inside Class so it can't be called by an Agent
+- The game element (actor,enemy,food) is not same size and the step size also not fixed size
 
 ## Fixing
 - Add more exploration epsilon
 - Add custom policy to punish loop go straight action
 - Add custom policy to punish if the step bigger than 100 steps times by success step (score/100)
 - Create a class of the Game
+- Define fixed size of each element
 
 ## Future work
 - Add boundary to the game
@@ -344,6 +346,8 @@ Reinforcement Learning with Q-Learning is a powerful technique that can be used 
 ### Agent Player Test
 
 
-  [![Watch the video](https://i3.ytimg.com/vi/mr7e3vZjnis/hqdefault.jpg)](https://youtu.be/mr7e3vZjnis)
-
+<p align="center">
+  <a href="https://youtu.be/mr7e3vZjnis" target="_blank"><img src="https://i3.ytimg.com/vi/mr7e3vZjnis/hqdefault.jpg" /></a>
   Click above video to watch.
+</p>
+
