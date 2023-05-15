@@ -1,6 +1,9 @@
 # AI-Theory-Project
 # Reinforcement Learning for SpriteGame - Q Learning
 
+<em><b>Please note</b> that I <b>download the original game</b> and <b>do Reinforcement Learning</b> with it</em>
+
+
 This project demonstrates the application of Q-Learning algorithm for solving games through reinforcement learning. The objective of the project is to showcase how an agent can learn to make optimal decisions by maximizing its rewards while interacting with the game environment.
 
 ## Game Description
@@ -312,7 +315,7 @@ Update the weights of the self.optimizer by calling the step method on the optim
 ```
 
 ## Results
-The Q-Learning algorithm was able to learn an optimal policy for the game, achieving best score 6000 over 5000 episodes.
+The Q-Learning algorithm was able to learn an optimal policy for the game, achieving best score 10.000 over 10.000 episodes.
 
 <p align="center">
   <img src="https://github.com/imagesid/AI-Theory-Project/blob/main/result/res5.png?raw=true" />
@@ -350,6 +353,7 @@ Reinforcement Learning with Q-Learning is a powerful technique that can be used 
 
 ### Agent Player Test
 
-<p align="center">
-  [![Watch the video](http://i3.ytimg.com/vi/mr7e3vZjnis/hqdefault.jpgg)](https://youtu.be/mr7e3vZjnis)
-</p>
+
+  [![Watch the video](https://i3.ytimg.com/vi/mr7e3vZjnis/hqdefault.jpg)](https://youtu.be/mr7e3vZjnis)
+
+  Click above video to watch.
