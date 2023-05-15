@@ -1,8 +1,7 @@
 # AI-Theory-Project
-# Reinforcement Learning for SpriteGame - Q Learning
-
 <em><b>Please note</b> that I <b>download the original game</b> and <b>do Reinforcement Learning</b> with it</em>
 
+# Reinforcement Learning for SpriteGame - Q Learning
 
 This project demonstrates the application of Q-Learning algorithm for solving games through reinforcement learning. The objective of the project is to showcase how an agent can learn to make optimal decisions by maximizing its rewards while interacting with the game environment.
 
@@ -18,9 +17,9 @@ Please note that I tried to do Reinforcement Learning from that code so the game
 Q-Learning is a model-free, off-policy reinforcement learning algorithm used to find the optimal action-selection policy. In Q-Learning, the agent learns the Q-value of a state-action pair, which represents the expected cumulative reward the agent will receive by taking that action in that state and following the optimal policy thereafter. The Q-value is updated iteratively using the Bellman equation until convergence.
 
 
-## Environtment
+## Environment
 I developed this code in Conda Environtment with Python Version 3.10
-To create conda environtment you can run the following command:
+To create conda environment you can run the following command:
 ```sh
 conda create --name agungenv python=3.10
 ```
@@ -130,64 +129,54 @@ Example:
 ```
 
 ### Bellman Equation
+<p align="center">
+<img src='https://www.simplilearn.com/ice9/free_resources_article_thumb/6-bellman.JPG'>
+</p>
 
-NewQ(s,a)
+Simplified rule:
 
-Simplification:
-
-### Deep Q Learning
+```sh
+Q = model.predict(state_0)
+Q_new = R + λ . max(Q(state_1))
+```
 
 ### Pseudocode of Train
 ```
 
-Set the "run_only" variable to False
-
-If the "test" argument was received (args.test is True), set "run_only" to True
-
-Initialize empty lists for "plot_scores" and "plot_mean_scores"
-Initialize "total_score" to 0
-Initialize "record" to 0
-
-Create an instance of the Agent class and store it in the "agent" variable
-Create an instance of the SpriteGame class and store it in the "game" variable
-Call the "speed()" method of the "game" object with the "run_only" variable as an argument
-
-If "run_only" is False, set debugging to False and sleeping time to 0.00005 using the "debuging()" and "sleeping()" methods of the "game" object
-
 Enter an infinite loop:
-    Call the "get_state()" method of the "agent" object with the "game" object as an argument and store the result in "state_old"
+    Get current game state
+
+    Get action based on the current game state
+
+    Do a movement in the game based on the action
+        Return the reward, game over and score
     
-    Call the "get_action()" method of the "agent" object with "state_old" and "run_only" as arguments and store the result in "final_move"
+    Get current game state after movement
+
+    If get reward:
+        Print the reward and the score
     
-    Call the "play_step()" method of the "game" object with "final_move" as an argument and store the result in "reward", "done", and "score"
-    Call the "get_state()" method of the "agent" object with the "game" object as an argument and store the result in "state_new"
-    
-    If "reward" is greater than 0, print "Reward" and "Score"
-    
-    Call the "train_short_memory()" method of the "agent" object with "state_old", "final_move", "reward", "state_new", and "done" as arguments
-    
-    Call the "remember()" method of the "agent" object with "state_old", "final_move", "reward", "state_new", and "done" as arguments
-    
-    If "done" is True:
-        Print "Punish" and "Score"
-        Call the "reset()" method of the "game" object
-        Increment "n_games" attribute of the "agent" object by 1
-        Call the "train_long_memory()" method of the "agent" object
+    Train short memory for the Agent
+    Agent Remember the details of first state, movement, reward, game over status, and new state
+
+    If game over / touching enemy:
+        Print the punishment and the score
+        Reset the game
+        Increase the number of played game
+        Train long memory for the Agent
         
-        If "score" is greater than "record":
-            Set "record" to "score"
-            If "run_only" is False, call the "save()" method of the "model" attribute of the "agent" object
-        
-        Print the current game number, score, and record
-        Append "score" to "plot_scores" and update "total_score" by adding "score"
-        Calculate the mean score by dividing "total_score" by "n_games" and append it to "plot_mean_scores"
-        Call the "plot()" function with "plot_scores" and "plot_mean_scores" as arguments
+        If the score is bigger then the record:
+            Set new record
+            Save the model
+
+        Append the plot
+        Show the plot
 
 ```
 
 ### Pseudocode of get_state() method
 ```
-Initialize 14 state variables with these values:
+Initialize 14 state variables with these values and put it inside a list:
     Set to 1 if current movement is horizontal movement
     Set to 1 if current movement is vertical movement
 
@@ -247,7 +236,6 @@ Change the index of the biggest return value to 1
 # Return final_move
 Return final_move
 
-
 ```
 
 ### Pseudocode of play_step() method
@@ -267,19 +255,19 @@ Go Down if action equal [0,0,0,1]
 
 ### Pseudocode of train_short_memory() method
 ```
-Call the train_step method of self.trainer with the arguments states, actions, rewards, next_states, and dones
+Call the train method with the arguments states, actions, rewards, next_states, and dones
 ```
 
 ### Pseudocode of train_long_memory() method
 ```
-If the length of self.memory is greater than BATCH_SIZE:
-    Set mini_sample as a random sample of size BATCH_SIZE from self.memory (a list of tuples)
+If the length of the memory is greater than BATCH_SIZE:
+    Set mini sample as a random sample of size BATCH_SIZE from the memory (a list of tuples)
 Else:
-    Set mini_sample as a copy of self.memory
+    Set mini sample as a copy of the memory
 
-Extract states, actions, rewards, next_states, and dones by unpacking the mini_sample tuple
+Extract states, actions, rewards, next_states, and dones by unpacking the mini sample tuple
 
-Call the train_step method of self.trainer with the arguments states, actions, rewards, next_states, and dones
+Call the train method with the arguments states, actions, rewards, next_states, and dones
 ```
 
 ### Pseudocode of train_step() method
@@ -294,23 +282,23 @@ If the length of the shape of state is 1:
 
 Initialize done as a tuple with a single boolean value
 
-Initialize pred as the output of the self.model method called with the argument state
+Initialize prediction as the output of the model method called with the argument state
 
-Create a deep copy of pred and store it in target
+Create a deep copy of prediction and store it in target variable
 
-Iterate over the range of the length of done:
+Iterate over the range of the length of done (game over):
     Set Q_new to the value of reward at the current index
-    If not done at the current index:
-        Set Q_new to the sum of reward at the current index and self.gamma multiplied by the maximum value of the self.model method called with next_state at the current index
+    If not game over at the current index:
+        Set Q_new to the sum of reward at the current index and the gamma multiplied by the maximum value of the model method called with next state at the current index
     Set the value of the target tensor at the current index and the index with the maximum value of action at the current index to Q_new
 
-Zero the gradients of the self.optimizer
+Zero the gradients of the the optimizer
 
-Calculate the loss by calling the self.criterion method with the arguments target and pred
+Calculate the loss by calling the criterion method with the arguments target and prediction
 
 Compute gradients of the loss tensor by calling the backward method on the loss tensor
 
-Update the weights of the self.optimizer by calling the step method on the optimizer.
+Update the weights of the optimizer by calling the step method on the optimizer.
 
 ```
 

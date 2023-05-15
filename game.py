@@ -15,11 +15,6 @@ pygame.init()
 fontObj = pygame.font.Font('freesansbold.ttf', 24)
 
 Point = namedtuple('Point', 'x, y')
-# reset
-# reward
-# play(action) -> direction
-# game_iteration
-# is_collision
 
 class SpriteGame:
     # def __init__(self, w=640,h=480):
