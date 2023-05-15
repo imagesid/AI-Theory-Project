@@ -6,12 +6,18 @@ from collections import deque
 from game import SpriteGame, Point
 from model import Linear_QNet, QTrainer
 from helper import plot
+import argparse
 
 #MAX_MEMORY = 100_000
 #BATCH_SIZE = 1000
 MAX_MEMORY = 10_000_000
 BATCH_SIZE = 10000
 LR = 0.001
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-t", "--test", dest="test", action="store_true") # Test actor
+parser.add_argument("-b", "--best", dest="best", action="store_true") # Load best trained model
+args = parser.parse_args()
 
 class Agent:
 
@@ -166,8 +172,15 @@ class Agent:
     def get_action(self, state, run_only=False):
         final_move = [0,0,0,0]
         if run_only:
+            #current trained
+            filename = '2023-05-15.pth'
+            if args.best:
+                #best trained
+                # filename = '14-05-2023-16 copy 2.pth'
+                filename = '14-05-2023-16 copy 3.pth'
+                
             state0 = torch.tensor(state, dtype=torch.float)
-            self.model.load()
+            self.model.load(filename)
             prediction = self.model(state0)
             
             move = torch.argmax(prediction).item()
@@ -200,15 +213,20 @@ class Agent:
 
 def train():
     run_only = False
+    if args.test:
+        run_only = True
+    
     plot_scores = []
     plot_mean_scores = []
     total_score = 0
     record = 0
     agent = Agent()
     game = SpriteGame()
-    game.speed(False)
-    game.debuging(False)
-    game.sleeping(0.00005)
+    game.speed(run_only)
+    
+    if not run_only:
+        game.debuging(False)
+        game.sleeping(0.00005)
     # game.hor=100
     # game.ver=120
     # game.ene_pos_hor=100
@@ -264,7 +282,8 @@ def train():
             if score > record:
                 record = score
                 if not run_only:
-                    agent.model.save("14-05-2023-16.pth")
+                    # agent.model.save("14-05-2023-16.pth")
+                    agent.model.save()
 
             print('Game', agent.n_games, 'Score', score, 'Record:', record)
 
