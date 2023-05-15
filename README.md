@@ -6,7 +6,8 @@
 This project demonstrates the application of Q-Learning algorithm for solving games through reinforcement learning. The objective of the project is to showcase how an agent can learn to make optimal decisions by maximizing its rewards while interacting with the game environment.
 
 ## Game Description
-The game environment used for this project is SpriteGame. The agent learns to play the game by observing its current state, taking an action based on its learned Q-values, and receiving a reward from the environment. The goal of the game is to get the highest score as possible without touching the enemy.
+SpriteGame is a classic arcade game where the player controls a yellow, circular character through a world. The objective is to eat all the dots while avoiding the enemies. If player comes into contact with an enemy, he loses a life. The game ends. The ultimate goal is to get the highest score possible while surviving as long as possible.
+
 This game can be downloaded from:
 ```sh
 https://github.com/Bereket-G/Python-simple-GUI-game-with-pygame-module
