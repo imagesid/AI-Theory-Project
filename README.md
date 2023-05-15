@@ -17,9 +17,27 @@ Q-Learning is a model-free, off-policy reinforcement learning algorithm used to 
 
 ## Environtment
 I developed this code in Conda Environtment with Python Version 3.10
+To create conda environtment you can run the following command:
+```sh
+conda create --name agungenv python=3.10
+```
+After that you can activate the environtment with this command:
+```sh
+conda activate agungenv
+```
 
 ## Getting Started
-To run this project, first clone this repository. Then, install the required dependencies by running the following command:
+To run this project, first clone this repository.
+```sh
+git clone https://github.com/imagesid/AI-Theory-Project.git
+```
+
+Go to the directory by running this command:
+```sh
+cd AI-Theory-Project
+```
+
+Then, install the required dependencies by running the following command:
 
 ```sh
 pip install -r requirements.txt
@@ -322,5 +340,5 @@ Reinforcement Learning with Q-Learning is a powerful technique that can be used 
 ### Original Game
 ![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/original-game.png?raw=true)
 
-### Agent Player
-[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg)](https://youtu.be/T-D1KVIuvjA)
+### Agent Player Test
+[![Watch the video](http://i3.ytimg.com/vi/mr7e3vZjnis/hqdefault.jpgg)](https://youtu.be/mr7e3vZjnis)
