@@ -1,0 +1,6 @@
+pygame==2.4.0
+torch==1.12.1
+random
+numpy
+argparse
+collections
