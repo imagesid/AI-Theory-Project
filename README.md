@@ -20,11 +20,12 @@ Q-Learning is a model-free, off-policy reinforcement learning algorithm used to 
 
 ## Environment
 I developed this code in Conda Environtment with Python Version 3.10
+
 To create conda environment you can run the following command:
 ```sh
 conda create --name agungenv python=3.10
 ```
-After that you can activate the environtment with this command:
+After that you can activate the environment with this command:
 ```sh
 conda activate agungenv
 ```
@@ -142,6 +143,7 @@ Q_new = R + λ . max(Q(state_1))
 ```
 
 ### Pseudocode of Train
+Majority of the code will be inside: agent.py and game.py
 ```
 
 Enter an infinite loop:
