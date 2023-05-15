@@ -9,8 +9,8 @@ from helper import plot
 
 #MAX_MEMORY = 100_000
 #BATCH_SIZE = 1000
-MAX_MEMORY = 100_000
-BATCH_SIZE = 1000
+MAX_MEMORY = 10_000_000
+BATCH_SIZE = 10000
 LR = 0.001
 
 class Agent:
@@ -23,7 +23,9 @@ class Agent:
         self.gamma = 0.9 # discount rate
         self.memory = deque(maxlen=MAX_MEMORY) # popleft()
         #self.model = Linear_QNet(12, 256, 4)
-        self.model = Linear_QNet(18, 256, 4)
+        #fine
+        # self.model = Linear_QNet(18, 256, 4)
+        self.model = Linear_QNet(14, 256, 4)
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
         
 
@@ -104,30 +106,30 @@ class Agent:
             (dir_d and game.is_enemy(point_u)) or 
             (dir_u and game.is_enemy(point_d)),
             
-            ## border
-            # # Danger straight direction
-            (dir_r and game.is_collision(point_r)) or 
-            (dir_l and game.is_collision(point_l)) or 
-            (dir_u and game.is_collision(point_u)) or 
-            (dir_d and game.is_collision(point_d)),
+            # ## border
+            # # # Danger straight direction
+            # (dir_r and game.is_collision(point_r)) or 
+            # (dir_l and game.is_collision(point_l)) or 
+            # (dir_u and game.is_collision(point_u)) or 
+            # (dir_d and game.is_collision(point_d)),
 
-            # Danger right direction
-            (dir_u and game.is_collision(point_r)) or 
-            (dir_d and game.is_collision(point_l)) or 
-            (dir_l and game.is_collision(point_u)) or 
-            (dir_r and game.is_collision(point_d)),
+            # # Danger right direction
+            # (dir_u and game.is_collision(point_r)) or 
+            # (dir_d and game.is_collision(point_l)) or 
+            # (dir_l and game.is_collision(point_u)) or 
+            # (dir_r and game.is_collision(point_d)),
 
-            # Danger left direction
-            (dir_d and game.is_collision(point_r)) or 
-            (dir_u and game.is_collision(point_l)) or 
-            (dir_r and game.is_collision(point_u)) or 
-            (dir_l and game.is_collision(point_d)),
+            # # Danger left direction
+            # (dir_d and game.is_collision(point_r)) or 
+            # (dir_u and game.is_collision(point_l)) or 
+            # (dir_r and game.is_collision(point_u)) or 
+            # (dir_l and game.is_collision(point_d)),
             
-            # Danger oposite direction
-            (dir_l and game.is_collision(point_r)) or 
-            (dir_r and game.is_collision(point_l)) or 
-            (dir_d and game.is_collision(point_u)) or 
-            (dir_u and game.is_collision(point_d)),
+            # # Danger oposite direction
+            # (dir_l and game.is_collision(point_r)) or 
+            # (dir_r and game.is_collision(point_l)) or 
+            # (dir_d and game.is_collision(point_u)) or 
+            # (dir_u and game.is_collision(point_d)),
             
             # Move direction
             dir_l,
@@ -174,7 +176,9 @@ class Agent:
             return final_move
         # random moves: tradeoff exploration / exploitation
         #self.epsilon = 80 - self.n_games
-        self.epsilon = 200 - self.n_games
+        # working fine
+        #self.epsilon = 200 - self.n_games
+        self.epsilon = 1000 - self.n_games
         
         if random.randint(0, 200) < self.epsilon:
         #if random.randint(0, 400) < self.epsilon:
@@ -195,14 +199,16 @@ class Agent:
 
 
 def train():
-    run_only = True
+    run_only = False
     plot_scores = []
     plot_mean_scores = []
     total_score = 0
     record = 0
     agent = Agent()
     game = SpriteGame()
-    game.speed(run_only)
+    game.speed(False)
+    game.debuging(False)
+    game.sleeping(0.00005)
     # game.hor=100
     # game.ver=120
     # game.ene_pos_hor=100
@@ -220,7 +226,7 @@ def train():
         final_move = agent.get_action(state_old, run_only)
         #print("Final Move", final_move)
         
-        # check manually
+        # # check manually
         # reward, game_over, score = game.play_step([0, 1, 0, 0])
         # if game_over == True:
         #     game.showGameOverScreen()
@@ -258,7 +264,7 @@ def train():
             if score > record:
                 record = score
                 if not run_only:
-                    agent.model.save()
+                    agent.model.save("14-05-2023-16.pth")
 
             print('Game', agent.n_games, 'Score', score, 'Record:', record)
 

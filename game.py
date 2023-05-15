@@ -7,6 +7,7 @@ from pygame.locals import *
 from enum import Enum
 from collections import namedtuple
 import numpy as np
+from collections import deque
 
 
 
@@ -37,8 +38,16 @@ class SpriteGame:
         #self.clock = pygame.time.Clock()
         #self.FPS = 10  # Frames per second.
         self.sleep = 0.0005
+        self.outline = False
+        self.debug = False
         self.reset()
     
+    def debuging(self, status=False):
+        self.debug = status
+    
+    def sleeping(self, sleep):
+        self.sleep=sleep
+        
     def speed(self, run_only=False) :
         if run_only:
             self.sleep = 0.05
@@ -68,6 +77,11 @@ class SpriteGame:
         self.textRectObj = self.textSurf.get_rect()
         self.textRectObj.center = (50,50)
         self.frame_iteration = 0
+        
+        # fixing one direction loop
+        self.current_loop_dir = deque(maxlen=12)
+        self.current_loop_b = deque(maxlen=12)
+        
         #self.welcome_screen()
         try:
             txtfile= open("high score.txt",'r')
@@ -106,11 +120,16 @@ class SpriteGame:
         #sleep(20)
 
     def move(self):
+        self.current_loop_dir.append(self.direction)
+        self.current_loop_b.append(self.b)
+        
         if self.direction == "horizontal":
-            # if self.hor >= self.w:
-            #     self.hor = 0
-            # if self.hor <= -self.size:
-            #     self.hor = self.w
+            # if without outline
+            if not self.outline:
+                if self.hor >= self.w:
+                    self.hor = 0
+                if self.hor <= -self.size:
+                    self.hor = self.w
             self.displ(self.im1, h = self.hor, v = self.ver)
             #self.hor += self.b 
             self.displ(self.im11, h = self.hor, v = self.ver)
@@ -120,10 +139,12 @@ class SpriteGame:
             self.hor += self.b
             self.update()
         elif self.direction  == "vertical":
-            # if self.ver >= self.h:
-            #     self.ver = 0
-            # if self.ver <= -self.size:
-            #     self.ver = self.h
+            # if without outline
+            if not self.outline:
+                if self.ver >= self.h:
+                    self.ver = 0
+                if self.ver <= -self.size:
+                    self.ver = self.h
             self.displ(self.im1,h = self.hor, v = self.ver)
             #self.ver += self.b
             self.displ(self.im11,h = self.hor, v = self.ver)
@@ -174,6 +195,29 @@ class SpriteGame:
         
         return False
     
+    def is_all_same(self, list):
+        ele = list[0]
+        chk = True
+        for item in list:
+            if ele != item:
+                chk = False
+                break
+        if (chk == True):
+            return True
+        return False
+    
+    def check_loop(self):
+        total=0
+        # print("How",len(self.current_loop_dir))
+        if len(self.current_loop_dir) == 12:
+            if self.is_all_same(self.current_loop_dir):
+                total += 1
+            if self.is_all_same(self.current_loop_b):
+                total += 1
+            if total == 2:
+                return True
+        return False
+    
     def play_step(self, action):
         #self.clock.tick(self.FPS)
         self.frame_iteration += 1
@@ -218,13 +262,27 @@ class SpriteGame:
             score_small = self.score / 100
         #print("Score small", score_small)
         #if self.frame_iteration > 500 * score_small:    
-        if self.is_collision() or self.frame_iteration > 100 * score_small:    
-        #if self.frame_iteration > 100 * score_small:    
+        # if with outline
+        #if self.is_collision() or self.frame_iteration > 100 * score_small:    
+        if self.outline and self.is_collision():
             self.running = False
             game_over = True
             reward = -10
             return reward, game_over, self.score
         
+        if self.frame_iteration > 100 * score_small:    
+            self.running = False
+            game_over = True
+            reward = -10
+            return reward, game_over, self.score
+        
+        # it one direction loop:
+        if self.check_loop():
+            print("Loop end")
+            self.running = False
+            game_over = True
+            reward = -10
+            return reward, game_over, self.score
         
         # 4. eat food
         if (abs(self.hor - self.ye_hor) <= self.size) and (abs(self.ver - self.ye_ver) <= self.size):
@@ -241,52 +299,54 @@ class SpriteGame:
         
         # action
         # up
-        if np.array_equal(action, [1, 0, 0, 0]):
-            self.load_player("up")
-            self.b = -self.size 
-            self.direction = "vertical"
-        # right
-        elif np.array_equal(action, [0, 1, 0, 0]):
-            self.load_player()
-            self.b = self.size  
-            self.direction = "horizontal"
-        # left
-        elif np.array_equal(action, [0, 0, 1, 0]):
-            self.load_player("le")
-            self.b = -self.size 
-            self.direction = "horizontal"
-        else: # [0, 0, 0, 1]
-            self.load_player("do")
-            self.b = self.size
-            self.direction = "vertical"
+        if not self.debug:
+            if np.array_equal(action, [1, 0, 0, 0]):
+                self.load_player("up")
+                self.b = -self.size 
+                self.direction = "vertical"
+            # right
+            elif np.array_equal(action, [0, 1, 0, 0]):
+                self.load_player()
+                self.b = self.size  
+                self.direction = "horizontal"
+            # left
+            elif np.array_equal(action, [0, 0, 1, 0]):
+                self.load_player("le")
+                self.b = -self.size 
+                self.direction = "horizontal"
+            else: # [0, 0, 0, 1]
+                self.load_player("do")
+                self.b = self.size
+                self.direction = "vertical"
         
-        # for manual check
-        # for event in pygame.event.get():
-        #     if (event.type == pygame.QUIT):
-        #         self.running = False
-        #         pygame.quit()
-        #         exit()
-        #     elif (event.type == pygame.KEYDOWN):
-        #         if ( event.key == pygame.K_SPACE):
-        #             self.displ(self.im2, h = self.hor , v = self.ver)
-        #             self.window.blit(self.textSurf, self.textRectObj)
-        #             pygame.event.wait()                   
-        #         elif (event.key == pygame.K_LEFT or event.key == pygame.K_a):
-        #             self.load_player("le")
-        #             self.b = -self.size 
-        #             self.direction = "horizontal"
-        #         elif (event.key == pygame.K_RIGHT or event.key == pygame.K_d):                                                       
-        #             self.load_player()
-        #             self.b = self.size  
-        #             self.direction = "horizontal"
-        #         elif (event.key == pygame.K_UP or event.key == pygame.K_w):                                                        
-        #             self.load_player("up")
-        #             self.b = -self.size 
-        #             self.direction = "vertical"
-        #         elif (event.key == pygame.K_DOWN or event.key == pygame.K_s):                                                     
-        #             self.load_player("do")
-        #             self.b = self.size
-        #             self.direction = "vertical"
+        if self.debug:
+            # for manual check
+            for event in pygame.event.get():
+                if (event.type == pygame.QUIT):
+                    self.running = False
+                    pygame.quit()
+                    exit()
+                elif (event.type == pygame.KEYDOWN):
+                    if ( event.key == pygame.K_SPACE):
+                        self.displ(self.im2, h = self.hor , v = self.ver)
+                        self.window.blit(self.textSurf, self.textRectObj)
+                        pygame.event.wait()                   
+                    elif (event.key == pygame.K_LEFT or event.key == pygame.K_a):
+                        self.load_player("le")
+                        self.b = -self.size 
+                        self.direction = "horizontal"
+                    elif (event.key == pygame.K_RIGHT or event.key == pygame.K_d):                                                       
+                        self.load_player()
+                        self.b = self.size  
+                        self.direction = "horizontal"
+                    elif (event.key == pygame.K_UP or event.key == pygame.K_w):                                                        
+                        self.load_player("up")
+                        self.b = -self.size 
+                        self.direction = "vertical"
+                    elif (event.key == pygame.K_DOWN or event.key == pygame.K_s):                                                     
+                        self.load_player("do")
+                        self.b = self.size
+                        self.direction = "vertical"
         
         return reward, game_over, self.score    
     def main(self):
