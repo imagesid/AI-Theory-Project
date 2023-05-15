@@ -100,9 +100,66 @@ We use Q-Learning Algorithm with this detail:
 ![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/mynn.png?raw=true)
 
 And we get the biggest value of the output layer as an action.
+
 Example: 
 ```sh
 [2.6, 5.4, 1.5, 0.2] => [0, 1, 0, 0] #go right
+```
+
+### Bellman Equation
+
+NewQ(s,a)
+
+Simplification:
+
+### Deep Q Learning
+
+### Pseudocode of agent
+```
+
+Set the "run_only" variable to False
+
+If the "test" argument was received (args.test is True), set "run_only" to True
+
+Initialize empty lists for "plot_scores" and "plot_mean_scores"
+Initialize "total_score" to 0
+Initialize "record" to 0
+
+Create an instance of the Agent class and store it in the "agent" variable
+Create an instance of the SpriteGame class and store it in the "game" variable
+Call the "speed()" method of the "game" object with the "run_only" variable as an argument
+
+If "run_only" is False, set debugging to False and sleeping time to 0.00005 using the "debuging()" and "sleeping()" methods of the "game" object
+
+Enter an infinite loop:
+    Call the "get_state()" method of the "agent" object with the "game" object as an argument and store the result in "state_old"
+    
+    Call the "get_action()" method of the "agent" object with "state_old" and "run_only" as arguments and store the result in "final_move"
+    
+    Call the "play_step()" method of the "game" object with "final_move" as an argument and store the result in "reward", "done", and "score"
+    Call the "get_state()" method of the "agent" object with the "game" object as an argument and store the result in "state_new"
+    
+    If "reward" is greater than 0, print "Reward" and "Score"
+    
+    Call the "train_short_memory()" method of the "agent" object with "state_old", "final_move", "reward", "state_new", and "done" as arguments
+    
+    Call the "remember()" method of the "agent" object with "state_old", "final_move", "reward", "state_new", and "done" as arguments
+    
+    If "done" is True:
+        Print "Punish" and "Score"
+        Call the "reset()" method of the "game" object
+        Increment "n_games" attribute of the "agent" object by 1
+        Call the "train_long_memory()" method of the "agent" object
+        
+        If "score" is greater than "record":
+            Set "record" to "score"
+            If "run_only" is False, call the "save()" method of the "model" attribute of the "agent" object
+        
+        Print the current game number, score, and record
+        Append "score" to "plot_scores" and update "total_score" by adding "score"
+        Calculate the mean score by dividing "total_score" by "n_games" and append it to "plot_mean_scores"
+        Call the "plot()" function with "plot_scores" and "plot_mean_scores" as arguments
+
 ```
 
 ## Results
@@ -111,6 +168,29 @@ The Q-Learning algorithm was able to learn an optimal policy for the game, achie
 
 ![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/Figure_77777.png?raw=true)
 
+## Chalenges
+- Without boundary, the actor can go everywhere without punishment. It made the state wider. That's why the score wasn't good enough
+- There were loop go straight action.
+- Too much steps
+
+## Fixing
+- Add more exploration epsilon
+- Add custom policy to punish loop go straight action
+- Add custom policy to punish if the step bigger than 100 steps times by success step (score/100)
+
+## Future work
+- Add boundary to the game
+- Add more exponents if possible
 
 ## Conclusion
 Reinforcement Learning with Q-Learning is a powerful technique that can be used to solve a variety of problems, including game playing. This project demonstrates the effectiveness of Q-Learning for game playing and serves as a starting point for exploring other reinforcement learning algorithms and applications.
+
+- Name : Ramadhan Agung Rahmat (아궁라마단)
+- Student Number: 72221781
+
+## Images
+### Original Game
+![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/original-game.png?raw=true)
+
+### Agent Player
+[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg)](https://youtu.be/T-D1KVIuvjA)
