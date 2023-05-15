@@ -115,7 +115,9 @@ We use Q-Learning Algorithm with this detail:
 - Hidden Layer = 256
 - Output Layer = 4
 
-![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/mynn.png?raw=true)
+<p align="center">
+  <img src="https://github.com/imagesid/AI-Theory-Project/blob/main/result/mynn.png?raw=true" />
+</p>
 
 And we get the biggest value of the output layer as an action.
 
@@ -316,7 +318,6 @@ The Q-Learning algorithm was able to learn an optimal policy for the game, achie
   <img src="https://github.com/imagesid/AI-Theory-Project/blob/main/result/res5.png?raw=true" />
 </p>
 
-![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/res5.png?raw=true)
 
 ## Challenges
 - Without boundary, the actor can go everywhere without punishment. It made the state wider. That's why the score wasn't good enough
@@ -342,8 +343,13 @@ Reinforcement Learning with Q-Learning is a powerful technique that can be used 
 ## Images
 ### Original Game
 
-![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/original-game.png?raw=true)
+
+<p align="center">
+  <img src="https://github.com/imagesid/AI-Theory-Project/blob/main/result/original-game.PNG?raw=true" />
+</p>
 
 ### Agent Player Test
 
-[![Watch the video](http://i3.ytimg.com/vi/mr7e3vZjnis/hqdefault.jpgg)](https://youtu.be/mr7e3vZjnis)
+<p align="center">
+  [![Watch the video](http://i3.ytimg.com/vi/mr7e3vZjnis/hqdefault.jpgg)](https://youtu.be/mr7e3vZjnis)
+</p>
