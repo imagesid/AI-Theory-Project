@@ -86,13 +86,31 @@ I put 14 states in this project.
     is_food_down(),
 ]
 ```
+Example: 
+```sh
+[0,1, 1,0,0,0, 0,0,1,0, 1,0,1,0]
+```
+
+### Model
+We use Q-Learning Algorithm with this detail:
+- Input Layer = 14 
+- Hidden Layer = 256
+- Output Layer = 4
+
+![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/mynn.png?raw=true)
+
+And we get the biggest value of the output layer as an action.
+Example: 
+```sh
+[2.6, 5.4, 1.5, 0.2] => [0, 1, 0, 0] #go right
+```
 
 ## Results
 The Q-Learning algorithm was able to learn an optimal policy for the game, achieving best score 6000 over 5000 episodes.
 
-<p align="center">
+
 ![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/Figure_77777.png?raw=true)
-</p>
+
 
 ## Conclusion
 Reinforcement Learning with Q-Learning is a powerful technique that can be used to solve a variety of problems, including game playing. This project demonstrates the effectiveness of Q-Learning for game playing and serves as a starting point for exploring other reinforcement learning algorithms and applications.
