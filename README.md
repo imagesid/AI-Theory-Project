@@ -338,7 +338,9 @@ Reinforcement Learning with Q-Learning is a powerful technique that can be used 
 
 ## Images
 ### Original Game
+
 ![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/original-game.png?raw=true)
 
 ### Agent Player Test
+
 [![Watch the video](http://i3.ytimg.com/vi/mr7e3vZjnis/hqdefault.jpgg)](https://youtu.be/mr7e3vZjnis)
