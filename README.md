@@ -314,11 +314,13 @@ The Q-Learning algorithm was able to learn an optimal policy for the game, achie
 - Without boundary, the actor can go everywhere without punishment. It made the state wider. That's why the score wasn't good enough
 - There were loop go straight action.
 - Too much steps
+- The game is not inside Class so it can't be called by an Agent
 
 ## Fixing
 - Add more exploration epsilon
 - Add custom policy to punish loop go straight action
 - Add custom policy to punish if the step bigger than 100 steps times by success step (score/100)
+- Create a class of the Game
 
 ## Future work
 - Add boundary to the game
