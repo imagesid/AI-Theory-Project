@@ -312,8 +312,11 @@ Update the weights of the self.optimizer by calling the step method on the optim
 ## Results
 The Q-Learning algorithm was able to learn an optimal policy for the game, achieving best score 6000 over 5000 episodes.
 
+<p align="center">
+  <img src="https://github.com/imagesid/AI-Theory-Project/blob/main/result/res5.png?raw=true" />
+</p>
 
-![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/Figure_77777.png?raw=true)
+![alt text](https://github.com/imagesid/AI-Theory-Project/blob/main/result/res5.png?raw=true)
 
 ## Challenges
 - Without boundary, the actor can go everywhere without punishment. It made the state wider. That's why the score wasn't good enough
