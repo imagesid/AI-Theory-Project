@@ -347,7 +347,7 @@ Reinforcement Learning with Q-Learning is a powerful technique that can be used 
 
 
 <p align="center">
-  <a href="https://youtu.be/mr7e3vZjnis" target="_blank"><img src="https://i3.ytimg.com/vi/mr7e3vZjnis/hqdefault.jpg" /></a>
+  <a href="https://youtu.be/mr7e3vZjnis" target="_blank"><img src="https://i3.ytimg.com/vi/mr7e3vZjnis/hqdefault.jpg" /></a><br>
   Click above video to watch.
 </p>
 
