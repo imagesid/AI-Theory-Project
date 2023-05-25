@@ -1,5 +1,5 @@
 # AI-Theory-Project
-<em><b>Please note</b> that I <b>download the original game</b> and <b>do Reinforcement Learning</b> with it</em>
+<em><b>Please note</b> that I <b>download the original game</b> and <b>do Reinforcement Learning</b> with it. Revision Branch</em> 
 
 # Reinforcement Learning for SpriteGame - Q Learning
 
