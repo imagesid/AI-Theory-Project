@@ -224,6 +224,9 @@ def train():
     game = SpriteGame()
     game.speed(run_only)
     
+    #add outline
+    game.outline=True
+    
     if not run_only:
         game.debuging(False)
         game.sleeping(0.00005)
