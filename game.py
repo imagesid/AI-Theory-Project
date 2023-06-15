@@ -256,9 +256,26 @@ class SpriteGame:
         if self.score > 0:
             score_small = self.score / 100
         #print("Score small", score_small)
+        #add test check
         #if self.frame_iteration > 500 * score_small:    
         # if with outline
         #if self.is_collision() or self.frame_iteration > 100 * score_small:    
+        if self.is_collision or self.frame_iteration > 1000 * score_small:
+            # set running into false
+            self.running = False
+            # set gameover to true
+            game_over = True
+            # set punishment to -10 so the model can distinguish 
+            # wether the current episode is good or not
+            # if current episode is good, then it will have reward +10
+            # if current episode is not good, then it will have punishment -10
+            # if current episode is not touching enemy nor food it
+            # will be no punishment and reward at that episode
+            return reward, game_over, self.score
+            # after that, the reward, game_over and the current score
+            # will be return to the caller, and they will check,
+            # if the current score is bigger than current record,
+            # the current record will be replaced with the current score
         if self.outline and self.is_collision():
             self.running = False
             game_over = True
