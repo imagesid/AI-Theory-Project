@@ -1,21 +1,11 @@
-# AI-Theory-Project
+# AI-Theory-Project [REVISION VERSION]
 <em><b>Please note</b> that I <b>download the original game</b> and <b>do Reinforcement Learning</b> with it. Revision Branch</em> 
 
-# Reinforcement Learning for SpriteGame - Q Learning
 
-This project demonstrates the application of Q-Learning algorithm for solving games through reinforcement learning. The objective of the project is to showcase how an agent can learn to make optimal decisions by maximizing its rewards while interacting with the game environment.
 
-## Game Description
-SpriteGame is a classic arcade game where the player controls a yellow, circular character through a world. The objective is to eat all the dots while avoiding the enemies. If player comes into contact with an enemy, he loses a life. The game ends. The ultimate goal is to get the highest score possible while surviving as long as possible.
-
-This game can be downloaded from:
-```sh
-https://github.com/Bereket-G/Python-simple-GUI-game-with-pygame-module
-```
-Please note that I tried to do Reinforcement Learning from that code so the game can be played by an agent to get best score.
-
-## Q-Learning Algorithm
-Q-Learning is a model-free, off-policy reinforcement learning algorithm used to find the optimal action-selection policy. In Q-Learning, the agent learns the Q-value of a state-action pair, which represents the expected cumulative reward the agent will receive by taking that action in that state and following the optimal policy thereafter. The Q-value is updated iteratively using the Bellman equation until convergence.
+## Updates
+- Give a limit to an agent to pass the border. It will die as soon as touching outline
+- Add more 4 environtment status such: border in stright, right, left and backward.
 
 
 ## Environment
