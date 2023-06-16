@@ -6,7 +6,8 @@
 ## Updates
 - Give a limit to an agent to pass the border. It will die as soon as touching outline
 - Add more 4 environtment status such: border in stright, right, left and backward.
-
+- Total, I put 18 states in this project. Detail in below segment
+- Set Punishment -10 If Actor Touching Border
 
 ## Environment
 I developed this code in Conda Environtment with Python Version 3.10
@@ -76,7 +77,7 @@ These actions will be used by an agent to explore the game
 [0,0,0,1] = Down
 ```
 ### State
-I put 14 states in this project.
+I put 18 states in this project.
 ```sh
 [
     is_horizontal_movement(),
@@ -86,6 +87,11 @@ I put 14 states in this project.
     is_enemy_in_right(),
     is_enemy_in_left(),
     is_enemy_in_back(),
+
+    is_border_in_front(),
+    is_border_in_right(),
+    is_border_in_left(),
+    is_border_in_back(),
 
     is_direction_left(),
     is_direction_right(),
@@ -100,12 +106,12 @@ I put 14 states in this project.
 ```
 Example: 
 ```sh
-[0,1, 1,0,0,0, 0,0,1,0, 1,0,1,0]
+[0,1, 1,0,0,0, 0,1,0,0, 0,0,1,0, 1,0,1,0]
 ```
 
 ### Model
 We use Q-Learning Algorithm with this detail:
-- Input Layer = 14 
+- Input Layer = 18 
 - Hidden Layer = 256
 - Output Layer = 4
 
@@ -178,6 +184,11 @@ Initialize 14 state variables with these values and put it inside a list:
     Set to 1 if enemy is in the left side
     Set to 1 if enemy is in the back side
 
+    Set to 1 if border is in the front side
+    Set to 1 if border is in the right side
+    Set to 1 if border is in the left side
+    Set to 1 if border is in the back side
+
     Set to 1 if current direction is to the left
     Set to 1 if current direction is to the right
     Set to 1 if current direction is to the top
@@ -235,6 +246,7 @@ Return final_move
 ```
 Initialize action from parameter
 Set Punishment -10 If Actor Touching Enemy
+Set Punishment -10 If Actor Touching Border
 Set Punishment -10 If Step more than 100 steps times by success step (score/100)
 Set Punishment -10 if There are loop go straight action.
 Set Reward +10 If Actor Touching Food
@@ -296,31 +308,12 @@ Update the weights of the optimizer by calling the step method on the optimizer.
 ```
 
 ## Results
-The Q-Learning algorithm was able to learn an optimal policy for the game, achieving best score 10.000 over 10.000 episodes.
+The previous scheme achieving 3000 best score  in first 2500 episode. In this version we can already get 3000 score in only 1800 episode.
 
 <p align="center">
-  <img src="https://github.com/imagesid/AI-Theory-Project/blob/main/result/res5.png?raw=true" />
+  <img src="https://github.com/imagesid/AI-Theory-Project/blob/main/result/yyyyy.png?raw=true" />
 </p>
 
-
-## Challenges
-- Without boundary, the actor can go everywhere without punishment. It made the state wider. That's why the score wasn't good enough
-- There were loop go straight action.
-- Too much steps
-- The game is not inside Class so it can't be called by an Agent
-- The game element (actor,enemy,food) is not same size and the step size also not fixed size
-
-## Fixing
-- Add more exploration epsilon
-- Add custom policy to punish loop go straight action
-- Add custom policy to punish if the step bigger than 100 steps times by success step (score/100)
-- Create a class of the Game
-- Define fixed size of each element
-
-## Future work
-- Add boundary to the game
-- Add more exponents if possible
-- Train Longer
 
 ## Conclusion
 Reinforcement Learning with Q-Learning is a powerful technique that can be used to solve a variety of problems, including game playing. This project demonstrates the effectiveness of Q-Learning for game playing and serves as a starting point for exploring other reinforcement learning algorithms and applications.
