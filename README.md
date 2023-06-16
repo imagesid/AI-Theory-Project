@@ -66,6 +66,7 @@ python agent.py -t -b
 ### Reward & Punishment
 - Eat Food = +10
 - Hit Enemy = -10
+- Hit Border = -10
 - Else = 0
 
 ### Actions
@@ -77,7 +78,7 @@ These actions will be used by an agent to explore the game
 [0,0,0,1] = Down
 ```
 ### State
-I put 18 states in this project.
+Previously, I put only 14 states, but in this version I put 18 states in this project.
 ```sh
 [
     is_horizontal_movement(),
@@ -115,9 +116,6 @@ We use Q-Learning Algorithm with this detail:
 - Hidden Layer = 256
 - Output Layer = 4
 
-<p align="center">
-  <img src="https://github.com/imagesid/AI-Theory-Project/blob/main/result/mynn.png?raw=true" />
-</p>
 
 And we get the biggest value of the output layer as an action.
 
@@ -311,7 +309,7 @@ Update the weights of the optimizer by calling the step method on the optimizer.
 The previous scheme achieving 3000 best score  in first 2500 episode. In this version we can already get 3000 score in only 1800 episode.
 
 <p align="center">
-  <img src="https://github.com/imagesid/AI-Theory-Project/blob/main/result/yyyyy.png?raw=true" />
+  <img src="https://github.com/imagesid/AI-Theory-Project/blob/revision/result/yyyyy.png?raw=true" />
 </p>
 
 
