@@ -319,19 +319,4 @@ Reinforcement Learning with Q-Learning is a powerful technique that can be used 
 - Name : Ramadhan Agung Rahmat (아궁라마단)
 - Student Number: 72221781
 
-## Images
-### Original Game
-
-
-<p align="center">
-  <img src="https://github.com/imagesid/AI-Theory-Project/blob/main/result/original-game.PNG?raw=true" />
-</p>
-
-### Agent Player Test
-
-
-<p align="center">
-  <a href="https://youtu.be/mr7e3vZjnis" target="_blank"><img src="https://github.com/imagesid/AI-Theory-Project/blob/main/result/image.png?raw=true" /></a><br>
-  Click above video to watch.
-</p>
 
