@@ -63,7 +63,7 @@ class SpriteGame:
     def displ(self,strin, h = 50, v =100):
         self.window.blit(strin, (h,v))
         pygame.display.update()
-        #sleep(0.011)
+        #sleep(0.5)
         sleep(self.sleep)
 
     def reset(self):
@@ -185,8 +185,15 @@ class SpriteGame:
         if pt is None:
             pt = Point(self.hor, self.ver)
         # hits boundary
-        if pt.x > self.w or pt.x < 0 or pt.y > self.h or pt.y < 0:
+        #print("x:", pt.x)
+        #print("y:", pt.y)
+        # make sure it doesn't touch the outline borders
+        if (abs(pt.x - self.w) <= self.size) or (abs(pt.y - self.h) <= self.size):
             return True
+        if (abs(pt.x + self.size) <= self.size) or (abs(pt.y + self.size) <= self.size):
+            return True
+        #if pt.x > self.w or pt.x < 0 or pt.y > self.h or pt.y < 0:
+            #return True
         
         return False
     
@@ -243,7 +250,8 @@ class SpriteGame:
             # print("First",abs(pt.x - self.ene_pos_hor) )
             # print("Second",abs(pt.y - self.ene_pos_ver) )
             pygame.mixer.music.pause()
-            self.play("boom.wav") # boom wav and time to game over and try to another chance
+            # remove sound
+            # self.play("boom.wav") # boom wav and time to game over and try to another chance
             self.window.blit(self.textSurf, self.textRectObj)
             self.running = False
             game_over = True
@@ -260,23 +268,24 @@ class SpriteGame:
         #if self.frame_iteration > 500 * score_small:    
         # if with outline
         #if self.is_collision() or self.frame_iteration > 100 * score_small:    
-        if self.is_collision or self.frame_iteration > 1000 * score_small:
+        #if self.frame_iteration > 1000 * score_small:
             # set running into false
-            self.running = False
+            #self.running = False
             # set gameover to true
-            game_over = True
+            #game_over = True
             # set punishment to -10 so the model can distinguish 
             # wether the current episode is good or not
             # if current episode is good, then it will have reward +10
             # if current episode is not good, then it will have punishment -10
             # if current episode is not touching enemy nor food it
             # will be no punishment and reward at that episode
-            return reward, game_over, self.score
+            #return reward, game_over, self.score
             # after that, the reward, game_over and the current score
             # will be return to the caller, and they will check,
             # if the current score is bigger than current record,
             # the current record will be replaced with the current score
         if self.outline and self.is_collision():
+        #if self.outline:
             self.running = False
             game_over = True
             reward = -10

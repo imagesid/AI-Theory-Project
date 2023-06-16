@@ -30,8 +30,8 @@ class Agent:
         self.memory = deque(maxlen=MAX_MEMORY) # popleft()
         #self.model = Linear_QNet(12, 256, 4)
         #fine
-        # self.model = Linear_QNet(18, 256, 4)
-        self.model = Linear_QNet(14, 256, 4)
+        self.model = Linear_QNet(18, 256, 4)
+        #self.model = Linear_QNet(14, 256, 4)
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
         
 
@@ -112,30 +112,31 @@ class Agent:
             (dir_d and game.is_enemy(point_u)) or 
             (dir_u and game.is_enemy(point_d)),
             
-            # ## border
-            # # # Danger straight direction
-            # (dir_r and game.is_collision(point_r)) or 
-            # (dir_l and game.is_collision(point_l)) or 
-            # (dir_u and game.is_collision(point_u)) or 
-            # (dir_d and game.is_collision(point_d)),
+            ## put the outline border as parameter
+            ## border
+            # # Danger straight direction
+            (dir_r and game.is_collision(point_r)) or 
+            (dir_l and game.is_collision(point_l)) or 
+            (dir_u and game.is_collision(point_u)) or 
+            (dir_d and game.is_collision(point_d)),
 
-            # # Danger right direction
-            # (dir_u and game.is_collision(point_r)) or 
-            # (dir_d and game.is_collision(point_l)) or 
-            # (dir_l and game.is_collision(point_u)) or 
-            # (dir_r and game.is_collision(point_d)),
+            # Danger right direction
+            (dir_u and game.is_collision(point_r)) or 
+            (dir_d and game.is_collision(point_l)) or 
+            (dir_l and game.is_collision(point_u)) or 
+            (dir_r and game.is_collision(point_d)),
 
-            # # Danger left direction
-            # (dir_d and game.is_collision(point_r)) or 
-            # (dir_u and game.is_collision(point_l)) or 
-            # (dir_r and game.is_collision(point_u)) or 
-            # (dir_l and game.is_collision(point_d)),
+            # Danger left direction
+            (dir_d and game.is_collision(point_r)) or 
+            (dir_u and game.is_collision(point_l)) or 
+            (dir_r and game.is_collision(point_u)) or 
+            (dir_l and game.is_collision(point_d)),
             
-            # # Danger oposite direction
-            # (dir_l and game.is_collision(point_r)) or 
-            # (dir_r and game.is_collision(point_l)) or 
-            # (dir_d and game.is_collision(point_u)) or 
-            # (dir_u and game.is_collision(point_d)),
+            # Danger oposite direction
+            (dir_l and game.is_collision(point_r)) or 
+            (dir_r and game.is_collision(point_l)) or 
+            (dir_d and game.is_collision(point_u)) or 
+            (dir_u and game.is_collision(point_d)),
             
             # Move direction
             dir_l,
@@ -173,11 +174,12 @@ class Agent:
         final_move = [0,0,0,0]
         if run_only:
             #current trained
-            filename = '2023-05-15.pth'
+            filename = '2023-06-15.pth'
             if args.best:
                 #best trained
                 # filename = '14-05-2023-16 copy 2.pth'
-                filename = '14-05-2023-16 copy 11.pth'
+                # filename = '14-05-2023-16 copy 11.pth'
+                filename = '2023-06-15.pth'
                 
             state0 = torch.tensor(state, dtype=torch.float)
             self.model.load(filename)
@@ -216,6 +218,7 @@ def train():
     if args.test:
         run_only = True
     
+    
     plot_scores = []
     plot_mean_scores = []
     total_score = 0
@@ -223,6 +226,8 @@ def train():
     agent = Agent()
     game = SpriteGame()
     game.speed(run_only)
+    # make it slow
+    #game.speed(False)
     
     #add outline
     game.outline=True
@@ -230,6 +235,7 @@ def train():
     if not run_only:
         game.debuging(False)
         game.sleeping(0.00005)
+        #game.sleeping(0.05)
     # game.hor=100
     # game.ver=120
     # game.ene_pos_hor=100
